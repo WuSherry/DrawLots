@@ -1,0 +1,36 @@
+﻿@model List<Lots>
+
+@{
+    Model.Reverse();
+}
+
+<table class="table table-hover table-dark">
+    <thead>
+        <tr>
+            <th scope="col" style="font-size:20px;font-family:monospace">#</th>
+            <th scope="col" style="font-size:20px;font-family:DFKai-sb">獎項</th>
+            <th scope="col" style="font-size:20px;font-family:DFKai-sb">人數</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var lot in Model)
+        {
+            var index = Model.IndexOf(lot) + 1;
+
+            <tr>
+                <th scope="row" style="vertical-align:middle">@index</th>
+                <td style="font-size:18px;font-family:DFKai-sb;vertical-align:middle">@lot.獎項</td>
+                <td style="font-size:18px;font-family:monospace;vertical-align:middle">@lot.人數</td>
+
+                <td>
+                    <button onclick="Delete('@lot.Id')" style="float:right" class="btn btn-outline-danger bouton-image monBouton">
+                        刪除
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

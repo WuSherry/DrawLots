@@ -1,0 +1,11 @@
+﻿@using DrawLots
+@using DrawLots.Models
+@using DrawLots.Data;
+@using DrawLots.Service;
+@using ReflectionIT.Mvc.Paging
+
+@inject ApplicationDbContext _db
+@inject LotService _lotService
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, ReflectionIT.Mvc.Paging

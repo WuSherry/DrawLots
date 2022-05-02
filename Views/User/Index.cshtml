@@ -1,0 +1,152 @@
+﻿@model int
+
+<style>
+    html, body {
+        min-height: 100%;
+        min-height: 100vh;
+        overflow: auto;
+    }
+
+    label {
+        font-size: 20px;
+        font-family: DFKai-sb;
+    }
+
+    .parent {
+        display: flex;
+        /* 水平置中 */
+        justify-content: center;
+        /* 垂直置中 */
+        align-items: end;
+    }
+
+    .bouton-image:before {
+        content: "";
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
+        background-color: transparent;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    .monBouton:before {
+        background-image: url(https://icons.iconarchive.com/icons/awicons/vista-artistic/16/delete-icon.png);
+    }
+</style>
+
+<br />
+<div class="container">
+    <form id="form" class="row justify-content-center form-group">
+        <div class="col-lg-4 col-md-8">
+            <label class="sr-only">新增參與者</label>
+            <input name="ActivityId" value="@Model" hidden>
+            <input id="nameInput" name="Name" class="form-control" placeholder="姓名">
+        </div>
+        <div class="parent col-lg-2 col-md-8 mt-2">
+            <button type="button" onclick="CreateUser()" class="btn btn-outline-primary" style="width:100%">新增</button>
+        </div>
+    </form>
+</div>
+<br />
+<br />
+<h1 style="font-size:28px;font-family:DFKai-sb;text-align:center">參與者名單</h1>
+
+<div class="container col-lg-8 col-md-10" id="table">
+</div>
+
+<br/>
+
+<center>
+    <div id="spinner" class="spinner-border text-success"></div>
+</center>
+
+<br />
+
+@section Scripts {
+    <script>
+        $(function () {
+            LoadTable();
+
+            $("#nameInput").on('keyup', function (e) {
+
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    CreateUser();
+                }
+            });
+        })
+
+        function LoadTable()
+        {
+            $("#spinner").show();
+
+            $("#table").load("@Url.Action("LoadTable")", { "id": '@Model' }, function () {
+                $("#spinner").hide();
+            });
+        }
+
+        function CreateUser()
+        {
+            var form = $("#form");
+            var nameInput = $("#nameInput");
+
+            $.post('@Url.Action("Create")', form.serialize(),
+                function (result) {
+
+                    if (result.success) {
+
+                        toastr["success"](result.message);
+                        ClearSearch();
+
+                        nameInput.val("");
+                        nameInput.focus();
+                    }
+                    else
+                    {
+                        toastr["warning"](result.message);
+                    }
+                })
+        }
+
+
+        function DeleteUser(id)
+        {
+            $.post('@Url.Action("Delete")', {id: id},
+                function (result) {
+
+                    if (result) {
+
+                        toastr["success"]("刪除成功");
+                        ClearSearch();
+                    }
+                    else
+                    {
+                        toastr["warning"]("刪除失敗");
+                    }
+                })
+        }
+
+        function Search()
+        {
+            var form = $("#SearchForm");
+            $("#spinner").show();
+
+            $("#table").load("@Url.Action("LoadTable")", $(form).serialize(), function () {
+                $("#spinner").hide();
+            });
+        }
+
+        function ClearSearch()
+        {
+            $.get("@Url.Action("ClearSearch")", null, function (result) {
+
+                $("#Page").val(1);
+                $("#Name").val("");
+
+                Search();
+            });
+        }
+    </script>
+}

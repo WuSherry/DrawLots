@@ -1,0 +1,43 @@
+﻿@{
+}
+
+<style>
+    html, body {
+        min-height: 100%;
+        min-height: 100vh;
+        overflow: auto;
+    }
+
+    label {
+        font-size: 20px;
+        font-family: DFKai-sb;
+    }
+
+    .TitleStyle {
+        font-size: 60px;
+        color: #0000A8;
+        font-family: monospace;
+        text-align: center
+    }
+</style>
+
+<h1 class="TitleStyle">Welcome!</h1>
+<br />
+<br />
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-lg-5 col-md-12">
+            <form method="post">
+                <div class="form-group">
+                    <label class="mb-2">抽獎活動名稱</label>
+                    <span class="">@TempData["Message"]</span>
+                    <input name="Name" type="text" class="form-control" required>
+                </div>
+                <br />
+                <center>
+                    <button type="submit" class="btn btn-secondary">下一步</button>
+                </center>
+            </form>
+        </div>
+    </div>
+</div>

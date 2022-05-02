@@ -1,0 +1,79 @@
+﻿@model PagingList<User>
+
+@{
+    var condition = ViewBag.Condition as User;
+}
+
+<style>
+    .tableContext {
+        font-size: 18px;
+        font-family: DFKai-sb;
+        vertical-align: middle
+    }
+</style>
+
+<center>
+    (共 @ViewBag.Count 人)
+</center>
+
+<br />
+
+<form id="SearchForm">
+    <input name="@nameof(condition.IsFromSearch)" value="true" hidden>
+    <input name="id" value="@ViewBag.id" hidden>
+
+    <div class="mb-2">
+        <div class="row align-items-center">
+            <label class="col-lg-1 text-nowrap">姓名</label>
+            <div class="col-lg-3">
+                <input class="form-control" id="Name" name="Name" value="@condition?.Name">
+            </div>
+            <label class="col-lg-1 text-nowrap">頁碼</label>
+            <div class="col-lg-3">
+                <input class="form-control" id="Page" min="1" max="@ViewBag.maxPage" type="number" name="pageIndex" value="@ViewBag.page" placeholder="共 @ViewBag.maxPage 頁">
+            </div>
+            <div class="col-lg-3 col-xl-4 mt-xl-0">
+                <button type="button" onclick="Search()" class="btn btn-outline-success px-6 font-weight-bold">
+                    <i class="flaticon2-search-1"></i>
+                    搜尋
+                </button>
+                <button onclick="ClearSearch()" class="btn btn-secondary px-6">清除</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<label class="float-end">第 @ViewBag.page 頁 / 共 @ViewBag.maxPage 頁</label>
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th width="10%" scope="col" style="font-size:20px;font-family:monospace">#</th>
+            <th scope="col" style="font-size:20px;font-family:DFKai-sb">人員</th>
+            <th width="20%" scope="col" style="font-size:20px;font-family:DFKai-sb"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            var index = Model.IndexOf(user) + 1;
+
+            <tr>
+                <th scope="row" class="align-middle">@index</th>
+
+                <td class="tableContext">
+                    @user.Name
+                </td>
+                <td>
+                    <button onclick="DeleteUser('@user.Id')" class="btn btn-outline-danger bouton-image monBouton float-end">
+                        刪除
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<center><a href="@Url.Action("Index", "item",new { id = ViewBag.id })" class="btn btn-secondary">下一步</a></center>
+
+
+

@@ -1,0 +1,137 @@
+﻿@model int
+<style>
+    html, body {
+        min-height: 100%;
+        min-height: 100vh;
+        overflow: auto;
+    }
+
+    label {
+        font-size: 20px;
+        font-family: DFKai-sb;
+    }
+
+    .parent {
+        display: flex;
+        /* 水平置中 */
+        justify-content: center;
+        /* 垂直置中 */
+        align-items: end;
+    }
+
+    .bouton-image:before {
+        content: "";
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
+        background-color: transparent;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    .monBouton:before {
+        background-image: url(https://icons.iconarchive.com/icons/awicons/vista-artistic/16/delete-icon.png);
+    }
+</style>
+
+<br />
+<div class="container">
+    <form id="form" class="row justify-content-center form-group">
+        <div class="col-lg-4 col-md-8">
+            <label class="sr-only">新增獎項</label>
+            <input name="ActivityId" value="@Model" hidden>
+
+            <div class="row">
+                <div class="col-lg-6 col-md-12">
+                    <input class="form-control" name="獎項" placeholder="獎項">
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <input class="form-control" name="人數" placeholder="得獎人數" oninput="value=value.replace(/^(0+)|[^\d]+/g,'')">
+                </div>
+            </div>
+        </div>
+        <div class="parent col-lg-2 col-md-8 mt-2">
+            <button type="button" onclick="Create()" class="btn btn-outline-primary" style="width:100%">新增</button>
+        </div>
+    </form>
+</div>
+<br />
+<br />
+<h1 style="font-size:28px;font-family:DFKai-sb;text-align:center">抽獎列表</h1>
+<center>
+    <span class="text-danger">@TempData["Message"]</span>
+</center>
+
+<div class="container col-lg-8 col-md-10" id="table">
+</div>
+<br />
+<center>
+        <a href="@Url.Action("Index", "User", new { id = Model })" class="btn btn-secondary mr-2">上一步</a>
+        <a href="@Url.Action("NextStep" ,new { id = Model })" class="btn btn-secondary">下一步</a>
+</center>
+
+@section Scripts {
+<script>
+    $(function () {
+        LoadTable();
+
+        $("input[name=人數]").on('keyup', function (e) {
+
+            if (e.key === 'Enter' || e.keyCode === 13) {
+                Create();
+            }
+        });
+    })
+
+    function LoadTable()
+    {
+        $("#table").load("@Url.Action("LoadTable")", { "id": '@Model' });
+    }
+
+    function Create()
+    {
+        var form = $("#form");
+        var 人數 = $("input[name=人數]");
+        var 獎項 = $("input[name=獎項]");
+
+        $.post('@Url.Action("Create")', form.serialize(),
+            function (result) {
+
+                if (result.success) {
+
+                    toastr["success"](result.message);
+                    LoadTable();
+
+                    人數.val("");
+                    獎項.val("");
+                    獎項.focus();
+                }
+                else
+                {
+                    toastr["warning"](result.message);
+                }
+            })
+    }
+
+
+    function Delete(id)
+    {
+        $.post('@Url.Action("Delete")', {id: id},
+            function (result) {
+
+                if (result) {
+
+                    toastr["success"]("刪除成功");
+                    LoadTable();
+                }
+                else
+                {
+                    toastr["warning"]("刪除失敗");
+                }
+            })
+    }
+</script>
+}
+

@@ -1,0 +1,81 @@
+﻿@model List<string>
+
+@{
+    var lots = _lotService.GetSelectList((int)ViewBag.id);
+}
+
+<style>
+    label {
+        font-size: 25px;
+        font-family: DFKai-sb;
+    }
+
+    .TitleStyle {
+        font-size: 60px;
+        color: #0000A8;
+        font-family: monospace;
+        text-align: center
+    }
+</style>
+
+<h1 class="TitleStyle">Congratulations!</h1>
+<br />
+<br />
+<center>
+    <div>
+        @if (lots.Any())
+        {
+            <form>
+                <div class="container">
+                    <div class="row justify-content-center form-group">
+
+                        <input hidden name="recordId" value="@ViewBag.recordId">
+                        <input hidden name="id" value="@ViewBag.id">
+
+                        <div style="width:auto">
+                            <select id="rewardselect" style="margin-right:5px;font-size:25px;padding:8px 5px;font-family:DFKai-sb" name="lotValue" asp-items="lots"></select>
+                        </div>
+                        <div style="width:auto" class="parent">
+                            <button class="btn btn-primary" name="LotButton">抽籤</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        }
+        else
+        {
+            <label class="text-danger">已全部抽完</label>
+        }
+
+        <br /><br />
+        <h1 style="font-size:25px;font-family:DFKai-sb;text-align:center">@ViewBag.獎項 得獎列表</h1>
+        <div style="max-height:400px;overflow:auto;width:50%" class="container">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col" style="font-size:20px;font-family:monospace">#</th>
+                        <th scope="col" style="font-size:20px;font-family:DFKai-sb">獎項</th>
+                        <th scope="col" style="font-size:20px;font-family:DFKai-sb">得獎者</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        @foreach (var user in Model)
+                        {
+                            var index = Model.IndexOf(user) +1;
+
+                            <tr>
+                                <th scope="row" style="vertical-align:middle">@index</th>
+                                <td style="font-size:18px;font-family:DFKai-sb;vertical-align:middle">@ViewBag.獎項</td>
+                                <td style="font-size:18px;font-family:DFKai-sb;vertical-align:middle">@user</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div><br />
+        <a href="@Url.Action("History","DrawLots",  new { id = ViewBag.id })" class="btn btn-secondary">查看抽獎結果</a>
+    </div>
+</center>

@@ -1,0 +1,40 @@
+﻿@model List<User>
+
+<label style="font-size:25px;font-family:DFKai-sb;text-align:center">參與者名單</label>
+<div style="max-height:500px;overflow:auto;width:70%" class="container">
+    <table class="table table-bordered fixWidth">
+        <tbody>
+            @{
+                var skipInt = 0;
+            }
+
+            @while (true)
+            {
+                var userSkip = Model.Skip(skipInt).Take(5).ToList();
+
+                <tr class="datatable-row">
+
+                    @if (userSkip.Any())
+                    {
+                        skipInt += 5;
+
+                        @for (var i = 0; i < userSkip.Count(); i++)
+                        {
+                            <td class="text-nowrap">@userSkip[i].Name</td>
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<br />
+
+<a href="@Url.Action("Index", "Item", new { id = ViewBag.id })" class="btn btn-secondary mr-2">上一步</a>
+
+<a href="@Url.Action("Execute", new { id = ViewBag.id })" class="btn btn-secondary">開始抽獎</a>

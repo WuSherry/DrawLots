@@ -1,0 +1,64 @@
+﻿@model List<Activities>
+
+<style>
+    .ButtonStyle {
+        margin: 10px 0px;
+    }
+
+    .ActivityNameStyle {
+        font-size: 20px;
+        font-family: DFKai-sb;
+        vertical-align: middle
+    }
+
+    .IdNumberStyle {
+        font-size: 20px;
+        font-family: monospace;
+        vertical-align: middle
+    }
+
+    .TitleStyle {
+        font-size: 60px;
+        color: #0000A8;
+        font-family: DFKai-sb;
+        text-align: center
+    }
+</style>
+
+<h1 class="TitleStyle">抽獎活動</h1>
+<br />
+<br />
+<a href="@Url.Action("OnePage")" class="float-end btn btn-primary">建立新活動</a>
+<center>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col" style="font-size:20px;font-family:monospace">#</th>
+                <th scope="col" style="font-size:25px;font-family:DFKai-sb">活動名稱</th>
+                <th scope="col" width="200"></th>
+                <th scope="col" width="200"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var activity in Model)
+            {
+                var index = Model.IndexOf(activity) + 1;
+
+                <tr>
+                    <th class="IdNumberStyle">@index</th>
+                    <td class="ActivityNameStyle">@activity.Name</td>
+
+                    <td><a href="@Url.Action("History","DrawLots", new { id = activity.Id })" class="btn btn-outline-primary ButtonStyle">查看抽獎結果</a></td>
+                    <td>
+                        <a href="@Url.Action("Again","DrawLots", new { id = activity.Id })" class="btn btn-outline-info ButtonStyle">
+                            再抽一次
+                        </a>
+                        <br/>
+                        <small class="text-muted">會刪除此活動的歷史抽獎紀錄</small>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</center>

@@ -1,0 +1,75 @@
+﻿@model List<History>
+
+
+<style>
+    td {
+        width: 20%
+    }
+</style>
+
+<a href="@Url.Action("MainPage","Home")" class="btn btn-secondary float-end">回到首頁</a>
+
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    @foreach (var history in Model)
+    {
+        var index = Model.IndexOf(history);
+        var active = index == 0 ? "active" : "";
+        var select = index == 0 ? "true" : "false";
+
+        <li class="nav-item" role="presentation">
+            <button class="nav-link @active" id="tab-@history.獎項" data-bs-toggle="tab" data-bs-target="#tab_@history.獎項" type="button" role="tab" aria-controls="tab-@history.獎項" aria-selected="@select">@history.獎項</button>
+        </li>
+    }
+</ul>
+<div class="tab-content" id="myTabContent">
+    @foreach (var history in Model)
+    {
+        var user = history?.Name?.Split("|");
+
+        var index = Model.IndexOf(history);
+        var active = index == 0 ? "show active" : "";
+
+        <div class="tab-pane fade @active" id="tab_@history.獎項" role="tabpanel" aria-labelledby="tab-@history.獎項">
+            <br />
+
+            <table class="table table-bordered">
+                <tbody>
+                    @{
+                        var skipInt = 0;
+                    }
+
+                    @while (true)
+                    {
+                        var userSkip = user.Skip(skipInt).Take(5).ToList();
+
+                        <tr class="datatable-row">
+
+                            @if (userSkip.Any())
+                            {
+                                skipInt += 5;
+
+                                @for (var i = 0; i < userSkip.Count(); i++)
+                                {
+                                    <td class="text-nowrap">@userSkip[i]</td>
+                                }
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                            @if (userSkip.Count < 5)
+                            {
+                                @for (var i = 0; i < 5 - userSkip.Count(); i++)
+                                {
+                                    <td class="text-nowrap"></td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
